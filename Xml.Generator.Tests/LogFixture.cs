@@ -1,5 +1,6 @@
 ﻿using System;
-using Xml.Generator;
+
+namespace Xml.Generator.Tests;
 
 public class LogFixture
     : IDisposable
