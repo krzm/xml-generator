@@ -7,30 +7,31 @@ public class TestUtils
 {
     private readonly object _lock = new object();
     private readonly IParameterError _parameterError;
-    private string fileName;
+    private string? fileName;
     private const string NewLine = "\r\n";
 
     public bool IsLogging { get; set; }
 
-    public Encoding Encoding { get; set; }
+    public Encoding? Encoding { get; set; }
 
-    public string FolderPath { get; set; }
+    public string? FolderPath { get; set; }
 
-    public string FileName
+    public string? FileName
     {
         get => fileName;
 
         set
         {
+            ArgumentNullException.ThrowIfNull(FolderPath);
             fileName = value;
             FilePath = Path.Combine(FolderPath, $"{FileName}{FileExtension}");
             LogToNewFile(string.Empty);
         }
     }
 
-    public string FileExtension { get; set; }
+    public string? FileExtension { get; set; }
 
-    public string FilePath { get; private set; }
+    public string? FilePath { get; private set; }
 
     public TestUtils(IParameterError standardErrors)
     {
@@ -71,7 +72,9 @@ public class TestUtils
     {
         lock (_lock)
         {
-            if (!IsLogging) return;
+            if (IsLogging == false) return;
+            ArgumentNullException.ThrowIfNull(FilePath);
+            ArgumentNullException.ThrowIfNull(Encoding);
             File.AppendAllText(FilePath, logText, Encoding);
         }
     }
@@ -80,7 +83,9 @@ public class TestUtils
     {
         lock (_lock)
         {
-            if (!IsLogging) return;
+            if (IsLogging == false) return;
+            ArgumentNullException.ThrowIfNull(FilePath);
+            ArgumentNullException.ThrowIfNull(Encoding);
             File.WriteAllText(FilePath, logText, Encoding);
         }
     }

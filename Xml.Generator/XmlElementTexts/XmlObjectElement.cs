@@ -2,10 +2,10 @@
 
 public abstract class XmlObjectElement : XmlElementsText
 {
-    protected IText XmlStart;
-    protected IText[] XmlObjects;
-    protected IText[] XmlProperties;
-    protected IText XmlEnd;
+    protected IText? XmlStart;
+    protected IText[]? XmlObjects;
+    protected IText[]? XmlProperties;
+    protected IText? XmlEnd;
 
     protected XmlObjectElement(params IXmlParser[] xmlParsers) : base(xmlParsers)
     {
@@ -26,6 +26,7 @@ public abstract class XmlObjectElement : XmlElementsText
         var mainObjectParser = XmlParsers[0];
         mainObjectParser.CreateXmlTextObjects();
         var xmlProps = new List<IText>();
+        ArgumentNullException.ThrowIfNull(mainObjectParser.TextObjects);
         foreach (var textObj in mainObjectParser.TextObjects)
         {
             if (textObj is XmlStart)
@@ -44,6 +45,7 @@ public abstract class XmlObjectElement : XmlElementsText
         foreach (var xmlParser in xmlParsers.Skip(1))
         {
             xmlParser.CreateXmlTextObjects();
+            ArgumentNullException.ThrowIfNull(xmlParser.TextObjects);
             xmlObjects.AddRange(xmlParser.TextObjects);
         }
         XmlObjects = xmlObjects.ToArray();

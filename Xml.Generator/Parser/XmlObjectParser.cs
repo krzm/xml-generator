@@ -2,22 +2,22 @@
 
 public class XmlObjectParser : IXmlParser
 {
-    private readonly string[][] _properties;
-    private readonly Func<string[], IXmlParser> _propertyParserFactory;
-    private readonly XmlParser[] _xmlParsers;
-    private XmlParser _xmlParser;
-    private XmlParser _xmlStartParsers;
-    private XmlParser _xmlEndParsers;
+    private readonly string[][]? properties;
+    private readonly Func<string[], IXmlParser>? propertyParserFactory;
+    private readonly XmlParser[]? xmlParsers;
+    private XmlParser? xmlParser;
+    private XmlParser? xmlStartParsers;
+    private XmlParser? xmlEndParsers;
 
-    public IText[] TextObjects { get; protected set; }
+    public IText[]? TextObjects { get; protected set; }
 
     public XmlObjectParser(string[][] properties
         , Func<string[], IXmlParser> propertyParserFactory
         , params XmlParser[] xmlParsers)
     {
-        _properties = properties ?? throw new ArgumentNullException(nameof(properties));
-        _propertyParserFactory = propertyParserFactory ?? throw new ArgumentNullException(nameof(propertyParserFactory));
-        _xmlParsers = xmlParsers ?? throw new ArgumentNullException(nameof(xmlParsers));
+        this.properties = properties ?? throw new ArgumentNullException(nameof(properties));
+        this.propertyParserFactory = propertyParserFactory ?? throw new ArgumentNullException(nameof(propertyParserFactory));
+        this.xmlParsers = xmlParsers ?? throw new ArgumentNullException(nameof(xmlParsers));
     }
 
     public void CreateXmlTextObjects() => CreateXmlObject();
@@ -25,16 +25,16 @@ public class XmlObjectParser : IXmlParser
     private void CreateXmlObject()
     {
         var list = new List<IText>();
-        switch (_xmlParsers.Length)
+        switch (xmlParsers?.Length)
         {
             case 1:
-                _xmlParser = _xmlParsers[0];
-                list.AddRange(CreateXmlElements(_xmlParser, _xmlParser));
+                xmlParser = xmlParsers[0];
+                list.AddRange(CreateXmlElements(xmlParser, xmlParser));
                 break;
             case 2:
-                _xmlStartParsers = _xmlParsers[0];
-                _xmlEndParsers = _xmlParsers[1];
-                list.AddRange(CreateXmlElements(_xmlStartParsers, _xmlEndParsers));
+                xmlStartParsers = xmlParsers[0];
+                xmlEndParsers = xmlParsers[1];
+                list.AddRange(CreateXmlElements(xmlStartParsers, xmlEndParsers));
                 break;
             default:
                 throw new ArgumentException(nameof(XmlObjectParser));
@@ -42,23 +42,27 @@ public class XmlObjectParser : IXmlParser
         TextObjects = list.ToArray();
     }
 
-    private List<IText> CreateXmlElements(XmlParser _xmlStartParser, XmlParser _xmlStopParser)
+    private List<IText> CreateXmlElements(
+        XmlParser xmlStartParser
+        , XmlParser xmlStopParser)
     {
         var list = new List<IText>
             {
-                new XmlStart(_xmlStartParser)
+                new XmlStart(xmlStartParser)
             };
         list.AddRange(CreateXmlProperties());
-        list.Add(new XmlEnd(_xmlStopParser));
+        list.Add(new XmlEnd(xmlStopParser));
         return list;
     }
 
     private List<IText> CreateXmlProperties()
     {
+        ArgumentNullException.ThrowIfNull(properties);
+        ArgumentNullException.ThrowIfNull(propertyParserFactory);
         var propertiesObject = new List<IText>();
-        foreach (var property in _properties)
+        foreach (var property in properties)
         {
-            var propertyParser = _propertyParserFactory(property);
+            var propertyParser = propertyParserFactory(property);
             propertiesObject.Add(new XmlPropertyText(propertyParser));
         }
         return propertiesObject;

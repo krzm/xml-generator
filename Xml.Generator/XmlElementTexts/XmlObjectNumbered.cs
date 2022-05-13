@@ -1,8 +1,11 @@
 ﻿namespace Xml.Generator;
 
-public class XmlObjectNumbered : XmlObject
+public class XmlObjectNumbered
+    : XmlObject
 {
-    public XmlObjectNumbered(params IXmlParser[] xmlBuilders) : base(xmlBuilders)
+    public XmlObjectNumbered(
+        params IXmlParser[] xmlBuilders)
+            : base(xmlBuilders)
     {
     }
 
@@ -14,6 +17,7 @@ public class XmlObjectNumbered : XmlObject
 
     protected override void BuildProperties()
     {
+        ArgumentNullException.ThrowIfNull(XmlProperties);
         foreach (var property in XmlProperties)
         {
             if (property is IOrderedText orderedProperty)
@@ -29,6 +33,7 @@ public class XmlObjectNumbered : XmlObject
 
     protected override void BuildInnerObjects()
     {
+        ArgumentNullException.ThrowIfNull(XmlObjects);
         for (int i = 0; i < XmlObjects.Length; i++)
         {
             if (XmlObjects[i] is IOrderedText orderedXmlObjText)

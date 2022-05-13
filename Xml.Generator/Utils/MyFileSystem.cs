@@ -13,7 +13,7 @@ public static class MyFileSystem
                 return true;
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             //todo: log
             return false;

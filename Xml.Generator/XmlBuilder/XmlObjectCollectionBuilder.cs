@@ -2,62 +2,68 @@
 
 public class XmlObjectCollectionBuilder
 {
-    private IDictionary<XmlCollectionParts, string> _collectionParts;
-    private IDictionary<XmlObjectParts, string> _objectParts;
+    private IDictionary<XmlCollectionParts, string>? collectionParts;
+    private IDictionary<XmlObjectParts, string>? objectParts;
 
     public IText CreateXml(
         IDictionary<XmlCollectionParts, string> collectionParts,
         IDictionary<XmlObjectParts, string> objectParts)
     {
-        _collectionParts = collectionParts;
-        _objectParts = objectParts;
+        this.collectionParts = collectionParts;
+        this.objectParts = objectParts;
         return CreateXmlCollection();
     }
 
-    private XmlCollection CreateXmlCollection() =>
-        new XmlCollection(
+    private XmlCollection CreateXmlCollection()
+    {
+        ArgumentNullException.ThrowIfNull(collectionParts);
+        return new XmlCollection(
             new XmlCollectionParser(
                 new XmlElementParser(
-                    _collectionParts[XmlCollectionParts.Prefix1],
-                    _collectionParts[XmlCollectionParts.Name],
-                    _collectionParts[XmlCollectionParts.Postfix1]),
+                    collectionParts[XmlCollectionParts.Prefix1],
+                    collectionParts[XmlCollectionParts.Name],
+                    collectionParts[XmlCollectionParts.Postfix1]),
                 new XmlElementParser(
-                    _collectionParts[XmlCollectionParts.Prefix2],
-                    _collectionParts[XmlCollectionParts.Name],
-                    _collectionParts[XmlCollectionParts.Postfix2])),
+                    collectionParts[XmlCollectionParts.Prefix2],
+                    collectionParts[XmlCollectionParts.Name],
+                    collectionParts[XmlCollectionParts.Postfix2])),
                 CreateXmlObject(),
                 CreateXmlObject());
+    }
 
     private XmlObject CreateXmlObject() =>
         new XmlObject(
             CreateObject());
 
-    private XmlObjectParser CreateObject() =>
-        new XmlObjectParser(
+    private XmlObjectParser CreateObject()
+    {
+        ArgumentNullException.ThrowIfNull(objectParts);
+        return new XmlObjectParser(
             new string[][]
             {
                     new string[]
                     {
-                        _objectParts[XmlObjectParts.PropPrefix],
-                        _objectParts[XmlObjectParts.Property1],
-                        _objectParts[XmlObjectParts.Value1],
-                        _objectParts[XmlObjectParts.NewLine]
+                        objectParts[XmlObjectParts.PropPrefix],
+                        objectParts[XmlObjectParts.Property1],
+                        objectParts[XmlObjectParts.Value1],
+                        objectParts[XmlObjectParts.NewLine]
                     },
                     new string[]
                     {
-                        _objectParts[XmlObjectParts.PropPrefix],
-                        _objectParts[XmlObjectParts.Property2],
-                        _objectParts[XmlObjectParts.Value2],
-                        _objectParts[XmlObjectParts.NewLine]
+                        objectParts[XmlObjectParts.PropPrefix],
+                        objectParts[XmlObjectParts.Property2],
+                        objectParts[XmlObjectParts.Value2],
+                        objectParts[XmlObjectParts.NewLine]
                     }
             }
             , (property) => new XmlPropertyParser(property)
             , new XmlElementParser(
-                _objectParts[XmlObjectParts.ObjectPrefix],
-                _objectParts[XmlObjectParts.ObjectName],
-                _objectParts[XmlObjectParts.NewLine])
+                objectParts[XmlObjectParts.ObjectPrefix],
+                objectParts[XmlObjectParts.ObjectName],
+                objectParts[XmlObjectParts.NewLine])
             , new XmlElementParser(
-                _objectParts[XmlObjectParts.ObjectPrefix],
-                _objectParts[XmlObjectParts.ObjectName],
-                _objectParts[XmlObjectParts.NewLine]));
+                objectParts[XmlObjectParts.ObjectPrefix],
+                objectParts[XmlObjectParts.ObjectName],
+                objectParts[XmlObjectParts.NewLine]));
+    }
 }

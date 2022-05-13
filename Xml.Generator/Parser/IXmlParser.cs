@@ -2,7 +2,7 @@
 
 public interface IXmlParser
 {
-    IText[] TextObjects { get; }
+    IText[]? TextObjects { get; }
 
     void CreateXmlTextObjects();
 }

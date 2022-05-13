@@ -51,15 +51,19 @@ public static class StringExtensions
 
     public static string RemoveSubstring(this string source, string substring)
     {
-        if (string.IsNullOrWhiteSpace(source) || string.IsNullOrWhiteSpace(substring)) return null;
+        if (string.IsNullOrWhiteSpace(source)
+            || string.IsNullOrWhiteSpace(substring))
+            return string.Empty;
         var index = source.IndexOf(substring);
         return index < 0 ? source : source.Remove(index, substring.Length);
     }
 
     public static string ReplaceWhitespace(this string input, string replacement)
     {
-        if (input == "" || input == string.Empty) return "";
-        if (input == null || replacement == null) return null;
+        if (input == "" || input == string.Empty)
+            return "";
+        if (input == null || replacement == null) 
+            return string.Empty;
         return new Regex(@"\s+").Replace(input, replacement);
     }
 

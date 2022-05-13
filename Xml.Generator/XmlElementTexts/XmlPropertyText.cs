@@ -1,29 +1,33 @@
 ﻿namespace Xml.Generator;
 
-public class XmlPropertyText : XmlElementText, IOrderedText
+public class XmlPropertyText
+    : XmlElementText
+        , IOrderedText
 {
-    private readonly IText _xmlLineNumber;
-    private readonly IText _xmlStart;
-    private readonly IText _xmlValue;
-    private readonly IText _xmlEnd;
+    private readonly IText? xmlLineNumber;
+    private readonly IText? xmlStart;
+    private readonly IText? xmlValue;
+    private readonly IText? xmlEnd;
 
-    public override string Text => $"{_xmlStart?.Text}{_xmlValue?.Text}{_xmlEnd?.Text}";
+    public override string Text => $"{xmlStart?.Text}{xmlValue?.Text}{xmlEnd?.Text}";
 
-    public string OrderedText => $"{_xmlLineNumber?.Text}{Text}";
+    public string OrderedText => $"{xmlLineNumber?.Text}{Text}";
 
     public XmlPropertyText(IXmlParser xmlBuilder) : base(xmlBuilder)
     {
         XmlParser.CreateXmlTextObjects();
+        ArgumentNullException.ThrowIfNull(XmlParser);
+        ArgumentNullException.ThrowIfNull(XmlParser.TextObjects);
         foreach (var textObj in XmlParser.TextObjects)
         {
             if (textObj is XmlLineNumber)
-                _xmlLineNumber = textObj;
+                xmlLineNumber = textObj;
             if (textObj is XmlStart || textObj is XmlStartClosed)
-                _xmlStart = textObj;
+                xmlStart = textObj;
             if (textObj is XmlValue)
-                _xmlValue = textObj;
+                xmlValue = textObj;
             if (textObj is XmlEnd)
-                _xmlEnd = textObj;
+                xmlEnd = textObj;
         }
     }
 }

@@ -1,11 +1,14 @@
 ﻿namespace Xml.Generator;
 
-public abstract class XmlFileElement : XmlElementsText
+public abstract class XmlFileElement
+    : XmlElementsText
 {
-    protected IText XmlHeader;
-    protected IText[] XmlElements;
+    protected IText? XmlHeader;
+    protected IText[]? XmlElements;
 
-    protected XmlFileElement(IXmlParser[] xmlParsers, params IText[] xmlElements) : base(xmlParsers)
+    protected XmlFileElement(IXmlParser[] xmlParsers
+        , params IText[] xmlElements)
+            : base(xmlParsers)
     {
         if (XmlParsers.Length <= 1)
         {
@@ -16,10 +19,10 @@ public abstract class XmlFileElement : XmlElementsText
         {
             CreateHeader();
             var list = new List<IText>();
-
             foreach (var xmlParser in XmlParsers.Skip(1))
             {
                 xmlParser.CreateXmlTextObjects();
+                ArgumentNullException.ThrowIfNull(xmlParser.TextObjects);
                 list.AddRange(xmlParser.TextObjects);
             }
 
@@ -32,7 +35,9 @@ public abstract class XmlFileElement : XmlElementsText
     private void CreateHeader()
     {
         XmlParsers[0].CreateXmlTextObjects();
-        foreach (var textObj in XmlParsers[0].TextObjects)
+        var parser = XmlParsers[0];
+        ArgumentNullException.ThrowIfNull(parser.TextObjects);
+        foreach (var textObj in parser.TextObjects)
         {
             if (textObj is XmlHeader)
                 XmlHeader = textObj;

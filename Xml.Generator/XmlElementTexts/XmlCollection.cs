@@ -5,26 +5,29 @@ namespace Xml.Generator;
 public class XmlCollection
     : XmlCollectionElement
 {
-    private readonly StringBuilder _stringBuilder;
-    private string _text;
+    private readonly StringBuilder? stringBuilder;
+    private string? text;
 
     public override string Text
     {
         get
         {
-            if (!string.IsNullOrWhiteSpace(_text)) return _text;
-            _stringBuilder.Clear();
-            _stringBuilder.Append(XmlStart.Text);
+            if (string.IsNullOrWhiteSpace(text) == false) 
+                return text;
+            ArgumentNullException.ThrowIfNull(stringBuilder);
+            stringBuilder.Clear();
+            stringBuilder.Append(XmlStart?.Text);
             foreach (var obj in XmlObjects)
             {
-                _stringBuilder.Append(obj.Text);
+                stringBuilder.Append(obj.Text);
             }
-            _stringBuilder.Append(XmlEnd.Text);
-            _text = _stringBuilder.ToString();
-            return _text;
+            stringBuilder.Append(XmlEnd?.Text);
+            text = stringBuilder.ToString();
+            return text;
         }
     }
 
-    public XmlCollection(IXmlParser xmlParser, params IText[] xmlObjects) : base(xmlParser, xmlObjects) =>
-        _stringBuilder = new StringBuilder();
+    public XmlCollection(IXmlParser xmlParser, params IText[] xmlObjects)
+        : base(xmlParser, xmlObjects) =>
+            stringBuilder = new StringBuilder();
 }

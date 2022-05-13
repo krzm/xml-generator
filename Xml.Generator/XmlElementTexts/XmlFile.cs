@@ -2,28 +2,32 @@
 
 namespace Xml.Generator;
 
-public class XmlFile : XmlFileElement
+public class XmlFile
+    : XmlFileElement
 {
-    private readonly StringBuilder _stringBuilder;
-    private string _fileText;
+    private readonly StringBuilder stringBuilder;
+    private string? fileText;
 
     public override string Text
     {
         get
         {
-            if (!string.IsNullOrWhiteSpace(_fileText)) return _fileText;
-            _stringBuilder.Clear();
+            if (!string.IsNullOrWhiteSpace(fileText)) return fileText;
+            stringBuilder.Clear();
             if (XmlHeader is IOrderedText orderedXmlHeader)
-                _stringBuilder.Append(orderedXmlHeader.OrderedText);
+                stringBuilder.Append(orderedXmlHeader.OrderedText);
+            ArgumentNullException.ThrowIfNull(XmlElements);
             foreach (var xmlElement in XmlElements)
             {
-                _stringBuilder.Append(xmlElement.Text);
+                stringBuilder.Append(xmlElement.Text);
             }
-            _fileText = _stringBuilder.ToString();
-            return _fileText;
+            fileText = stringBuilder.ToString();
+            return fileText;
         }
     }
 
-    public XmlFile(IXmlParser[] xmlParsers, params IText[] xmlElements) : base(xmlParsers, xmlElements) =>
-        _stringBuilder = new StringBuilder();
+    public XmlFile(IXmlParser[] xmlParsers
+        , params IText[] xmlElements)
+            : base(xmlParsers, xmlElements) =>
+                stringBuilder = new StringBuilder();
 }

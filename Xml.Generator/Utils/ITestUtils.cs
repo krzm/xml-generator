@@ -6,15 +6,15 @@ public interface ITestUtils
 {
     bool IsLogging { get; set; }
 
-    Encoding Encoding { get; set; }
+    Encoding? Encoding { get; set; }
 
-    string FolderPath { get; set; }
+    string? FolderPath { get; set; }
 
-    string FileName { get; set; }
+    string? FileName { get; set; }
 
-    string FileExtension { get; set; }
+    string? FileExtension { get; set; }
 
-    string FilePath { get; }
+    string? FilePath { get; }
 
     string[] ExtractParameters(string separatedParameters, params char[] separator);
 
