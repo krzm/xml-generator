@@ -27,7 +27,6 @@ public class XmlCollectionParser
 
     public void CreateXmlTextObjects()
     {
-        ArgumentNullException.ThrowIfNull(xmlParser);
         ArgumentNullException.ThrowIfNull(startXmlParser);
         ArgumentNullException.ThrowIfNull(endXmlParser);
         var list = new List<IText>
